@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { Tag, Product, ProductTag } = require('../../models');
 
 // The `/api/tags` endpoint
+// would this be the same as the others just wth a different {}
 
 router.get('/', (req, res) => {
   // find all tags
