@@ -12,17 +12,14 @@ ProductTag.init(
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
+    product_id: {
       type: DataTypes.STRING,
-      allowNull: false
+      references: {model: 'product', key: 'id'}
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true
-      }
+    tag_id: {
+      type: DataTypes.INTEGER,
+      references: {model: 'tag', key: 'id'}
+     
     }
   },
   {

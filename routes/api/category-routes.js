@@ -3,36 +3,29 @@ const { Category, Product, ProductTag } = require('../../models');
 
 // The `/api/categories` endpoint
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const productData = await Product.findAll();
-    res.status(200).json(productData);
+    const categoryData = await Category.findAll();
+    res.status(200).json(categoryData);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
 router.get('/:id', (req, res) => {
-  try {
-    const productData = await Product.findByPk(req.params.id, {
-      include: [{ model: Product, through: ProductTag, as: 'tag_products' }]
-    });
+  
+     Category.findOne({where: {id:req.params.id},include: [{ model: Category, through: Product, as: 'category_Product' }]}).then(
+      (category)=> res.json(category)
+    ).catch((err) => {
+      res.status(500).json(err);
+    })
 
-    if (!productData) {
-      res.status(404).json({ message: 'No location found with this id!' });
-      return;
-    }
-
-    res.status(200).json(productData);
-  } catch (err) {
-    res.status(500).json(err);
-  }
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const productData = await Product.create(req.body);
-    res.status(200).json(productData);
+    const categoryData = await Category.create(req.body);
+    res.status(200).json(categoryData);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -40,26 +33,36 @@ router.post('/', (req, res) => {
 
 
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   // update a category by its `id` value
+  try{
+    const categoryData = await Category.update(req.body,{
+      where:{id:req.params.id}
+    });
+    res.status(200).json(categoryData);
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
+  
 
 
 
-router.delete('/:id', (req, res) => {
+
+router.delete('/:id', async (req, res) => {
   try {
-    const productData = await Product.destroy({
+    const categoryData = await Product.destroy({
       where: {
         id: req.params.id
       }
     });
 
-    if (!productData) {
+    if (!categoryData) {
       res.status(404).json({ message: 'No Prodcut found with this tag!' });
       return;
     }
 
-    res.status(200).json(productData);
+    res.status(200).json(categoryData);
   } catch (err) {
     res.status(500).json(err);
   }
